@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="What Does an OCR Model Look At? Probing Implicit Component Discrimination in Deepseek-OCR. FGVC13 Workshop @ CVPR 2026.">
+  <meta name="keywords" content="OCR, attention probing, DeepSeek-OCR, document understanding, fine-grained visual categorization, FGVC, CVPR 2026">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What Does an OCR Model Look At?</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">What Does an OCR Model Look At? Probing Implicit Component Discrimination in Deepseek-OCR</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Johnathan Han<sup>1</sup>,</span>
+            <span class="author-block">Samik Barman<sup>1</sup>,</span>
+            <span class="author-block">Lening Cui<sup>2</sup>,</span>
+            <span class="author-block">Ruizhe Li<sup>3</sup>,</span>
+            <span class="author-block">Kevin Zhu<sup>1</sup></span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Algoverse AI Research,</span>
+            <span class="author-block"><sup>2</sup>Vanderbilt University,</span>
+            <span class="author-block"><sup>3</sup>University of Aberdeen</span>
+          </div>
+
+          <div class="is-size-5 publication-authors" style="margin-top: 0.5rem;">
+            <span class="author-block" style="font-weight: 600;">FGVC13 Workshop @ CVPR 2026</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="./static/paper.pdf" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="./static/images/poster.jpg" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-image"></i></span>
+                  <span>Poster</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Document layout components form a fine-grained visual taxonomy: a single page may contain titles, text blocks, figures, captions, tables, equations, and footnotes. End-to-end vision-language OCR models receive no component-level supervision yet must implicitly discriminate among these categories to transcribe a page.
+          </p>
+          <p>
+            We extract spatial attention from Deepseek-OCR's vision encoder across OmniDocBench. We define <b>attention efficiency</b> (a component's attention share divided by its area share) and find a consistent directional split: text-bearing components are over-attended (text blocks 1.10&times; and table captions 1.17&times;), non-text regions under-attended (figures 0.94&times; and masks below 0.95&times;). 9 of 19 testable categories deviate significantly from proportional allocation after Bonferroni correction.
+          </p>
+          <p>
+            Per-document correlations between attention density and OCR accuracy are significant for several components. After partial-correlation control for document complexity, three components retain significant effects: figure density (<i>r</i>&nbsp;=&nbsp;&minus;0.13, <i>p</i>&nbsp;&lt;&nbsp;0.01), header density (<i>r</i>&nbsp;=&nbsp;+0.09, <i>p</i>&nbsp;=&nbsp;0.01), and title density (<i>r</i>&nbsp;=&nbsp;&minus;0.06, <i>p</i>&nbsp;=&nbsp;0.04).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0;">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Method</h2>
+        <div class="content has-text-justified">
+          <p>
+            We extract self-attention weights from DeepSeek-OCR's 24-layer CLIP ViT-L encoder using forward hooks across 1,355 pages from OmniDocBench. Attention is aggregated across all heads and layers, with sink tokens zeroed and renormalized. The resulting spatial attention maps are intersected with ground-truth component bounding boxes to compute per-component attention efficiency.
+          </p>
+        </div>
+        <img src="./static/images/fig_pipeline.png" alt="Attention extraction pipeline" style="width: 100%; max-width: 900px;">
+        <p class="has-text-centered is-size-6" style="margin-top: 0.5rem; color: #666;">
+          <b>Figure 1.</b> Attention extraction pipeline for the global view (1024&times;1024, 256 tokens).
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0;">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Results</h2>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h3 class="title is-4">Per-Component Attention Efficiency</h3>
+        <div class="content has-text-justified">
+          <p>
+            The encoder systematically over-attends text-bearing components and under-attends non-text regions. 9 of 19 categories are significant after Bonferroni correction, with consistent directionality: every significant text-bearing category has efficiency &gt; 1.00, while every significant non-text category has efficiency &lt; 1.00.
+          </p>
+        </div>
+        <div class="has-text-centered">
+          <img src="./static/images/fig_efficiency.png" alt="Per-component attention efficiency" style="width: 100%; max-width: 700px;">
+          <p class="is-size-6" style="margin-top: 0.5rem; color: #666;">
+            <b>Figure 2.</b> Per-component attention efficiency across 22 document component types.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-centered" style="margin-top: 2rem;">
+      <div class="column is-full-width">
+        <h3 class="title is-4">Attention Density vs. OCR Accuracy</h3>
+        <div class="content has-text-justified">
+          <p>
+            Raw correlations between attention density and OCR accuracy are significant for text blocks (<i>r</i>&nbsp;=&nbsp;+0.12) and figures (<i>r</i>&nbsp;=&nbsp;&minus;0.11). After controlling for document complexity (character count and number of component types), most correlations are attenuated, but three components retain significant partial correlations.
+          </p>
+        </div>
+        <div class="has-text-centered">
+          <img src="./static/images/fig_correlations.png" alt="Attention density vs OCR accuracy" style="width: 100%; max-width: 900px;">
+          <p class="is-size-6" style="margin-top: 0.5rem; color: #666;">
+            <b>Figure 3.</b> Forest plot and scatter plots of per-component attention density vs. OCR accuracy.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-centered" style="margin-top: 2rem;">
+      <div class="column is-full-width">
+        <h3 class="title is-4">Partial Correlations After Complexity Control</h3>
+        <div class="has-text-centered">
+          <img src="./static/images/fig_partial.png" alt="Partial correlation scatter plots" style="width: 100%; max-width: 600px;">
+          <p class="is-size-6" style="margin-top: 0.5rem; color: #666;">
+            <b>Figure 4.</b> Residualized scatter plots for components whose partial correlations survive complexity control.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="BibTeX" style="padding-top: 0;">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{han2026ocr,
+  author    = {Han, Johnathan and Barman, Samik and Cui, Lening and Li, Ruizhe and Zhu, Kevin},
+  title     = {What Does an OCR Model Look At? Probing Implicit Component Discrimination in Deepseek-OCR},
+  booktitle = {Proceedings of the 13th Workshop on Fine-Grained Visual Categorization (FGVC13), CVPR},
+  year      = {2026},
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website template is borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>, licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
